@@ -66,7 +66,10 @@
           </div>
           <p data-i18n="aiSub" class="text-xs text-slate-400 mb-4">Query issues regarding California housing ordinances or labor/employment code.</p>
           <textarea id="userInput" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="e.g., 'My manager makes me work over 8 hours a day without overtime pay' or 'My landlord raised rent by 12%'..."></textarea>
-          
+
+          <!-- Direct Inline AI Result Box -->
+          <div id="aiOutput" class="hidden mt-3 p-3 bg-indigo-950/60 border border-indigo-800 rounded-lg text-xs text-indigo-200"></div>
+
           <!-- Referral Warning Banner -->
           <div id="aiWarning" class="hidden mt-3 p-3 bg-red-950/60 border border-red-800 rounded-lg text-xs text-red-300"></div>
         </div>
@@ -297,6 +300,9 @@
 
     function switchDomain(domain) {
       currentDomain = domain;
+      const select = document.getElementById('domainSelect');
+      if (select) select.value = domain;
+
       const badge = document.getElementById('domainBadge');
       if (domain === 'labor') {
         badge.textContent = 'Labor Mode';
@@ -391,31 +397,45 @@
     function analyzeIssue() {
       const input = document.getElementById('userInput').value.trim().toLowerCase();
       const warningBox = document.getElementById('aiWarning');
-      const res = document.getElementById('diagResult');
+      const aiOutput = document.getElementById('aiOutput');
 
       if (!input) return;
 
       warningBox.classList.add('hidden');
-      res.classList.add('hidden');
+      aiOutput.classList.add('hidden');
 
       let isAnswerable = false;
+      let analysisText = '';
 
-      // Keyword matching engine
-      if (input.includes('overtime') || input.includes('hours') || input.includes('pay') || input.includes('break') || input.includes('wage') || input.includes('employer')) {
+      // Intelligent keyword matching & dropdown synchronization
+      if (input.includes('break') || input.includes('meal') || input.includes('lunch')) {
         switchDomain('labor');
+        const select = document.getElementById('diagIssue');
+        if (select) select.value = 'nobreak';
+        analysisText = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED (Meal Breaks):</span> Under Cal. Lab. Code § 226.7, non-exempt employees working shifts over 5 hours are legally entitled to a 30-minute uninterrupted meal break. Denying this requires 1 hour of premium pay.`;
         isAnswerable = true;
-      } else if (input.includes('rent') || input.includes('landlord') || input.includes('eviction') || input.includes('lease') || input.includes('tenant') || input.includes('housing')) {
+      } else if (input.includes('overtime') || input.includes('8 hour') || input.includes('hours') || input.includes('pay') || input.includes('wage')) {
+        switchDomain('labor');
+        const select = document.getElementById('diagIssue');
+        if (select) select.value = 'ot8';
+        analysisText = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED (Overtime Pay):</span> Under Cal. Lab. Code § 510, non-exempt employees are entitled to 1.5x pay for hours worked over 8 in a single workday.`;
+        isAnswerable = true;
+      } else if (input.includes('rent') || input.includes('landlord') || input.includes('eviction') || input.includes('lease') || input.includes('tenant')) {
         switchDomain('housing');
+        const rentInput = document.getElementById('diagRentPct');
+        if (rentInput) rentInput.value = '12';
+        analysisText = `<span class="text-amber-400 font-bold">HOUSING EVALUATION (AB 1482):</span> Under Cal. Civ. Code § 1947.12, annual rent increases for covered multi-family units are capped at 5% + CPI (max 10%). Exceeding this limit is unlawful.`;
         isAnswerable = true;
       }
 
       if (isAnswerable) {
-        runDiagnostic();
+        aiOutput.innerHTML = analysisText;
+        aiOutput.classList.remove('hidden');
+        runDiagnostic(); // Automatically updates the right panel in sync
       } else {
-        // Increment unanswered counter and show Legal Representation Referral banner
         unansweredCount++;
         document.getElementById('unansweredCount').textContent = unansweredCount;
-        warningBox.innerHTML = `<strong>⚠️ Formal Legal Representation Required:</strong> The engine cannot resolve this question automatically. If you require legal representation, legal advice, or customized litigation assistance, please refer to the <a href="https://www.calbar.ca.gov/Public/Need-Legal-Help" target="_blank" class="underline text-red-200 hover:text-white font-semibold">California State Bar Lawyer Referral Service</a> or your local Legal Aid office.`;
+        warningBox.innerHTML = `<strong>⚠️ Formal Legal Representation Required:</strong> The engine cannot resolve this question automatically. If you require legal representation, please refer to the <a href="https://www.calbar.ca.gov/Public/Need-Legal-Help" target="_blank" class="underline text-red-200 hover:text-white font-semibold">California State Bar Lawyer Referral Service</a>.`;
         warningBox.classList.remove('hidden');
       }
     }
