@@ -111,13 +111,13 @@
         </h2>
         <span class="text-[10px] font-mono text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded" data-i18n="calcBadge">Automated Calculations</span>
       </div>
-      <p data-i18n="calcSub" class="text-xs text-slate-400 mb-6">Calculates court response deadlines (CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).</p>
+      <p data-i18n="calcSub" class="text-xs text-slate-400 mb-6">Calculates court response deadlines (10 court days per CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <label data-i18n="calcTypeLabel" class="block text-xs font-medium text-slate-300 mb-2">Calculation Type</label>
           <select id="calcType" onchange="updateCalcInputs()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200">
-            <option value="eviction">Unlawful Detainer Response Deadline (CCP § 1167)</option>
+            <option value="eviction">Unlawful Detainer Response Deadline (10 Court Days - CCP § 1167)</option>
             <option value="wage">Final Pay Waiting Time Penalty (Lab. Code § 203)</option>
           </select>
         </div>
@@ -194,7 +194,7 @@
         diagBtn: "Run Diagnostic",
         calcTitle: "Statutory Deadline & Wage Penalty Calculator",
         calcBadge: "Automated Calculations",
-        calcSub: "Calculates court response deadlines (CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).",
+        calcSub: "Calculates court response deadlines (10 court days per CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).",
         calcTypeLabel: "Calculation Type",
         calcResultHeader: "Calculated Output",
         calculateBtn: "Calculate",
@@ -218,7 +218,7 @@
         diagBtn: "运行法律诊断",
         calcTitle: "法定截止日期与工资罚金计算器",
         calcBadge: "自动精确计算",
-        calcSub: "计算法院答辩截止日期 (CCP § 1167) 及加州劳动法滞纳工资罚金 (Lab. Code § 203)。",
+        calcSub: "计算法院答辩截止日期 (CCP § 1167 - 10个法院工作日) 及加州劳动法滞纳工资罚金 (Lab. Code § 203)。",
         calcTypeLabel: "计算类型",
         calcResultHeader: "计算结果",
         calculateBtn: "立即计算",
@@ -242,7 +242,7 @@
         diagBtn: "Ejecutar Diagnóstico",
         calcTitle: "Calculadora de Plazos Legales y Sanciones Salariales",
         calcBadge: "Cálculos Automatizados",
-        calcSub: "Calcula los plazos de respuesta judicial (CCP § 1167) y sanciones por demora salarial (Lab. Code § 203).",
+        calcSub: "Calcula los plazos de respuesta judicial (10 días hábiles según CCP § 1167) y sanciones por demora salarial (Lab. Code § 203).",
         calcTypeLabel: "Tipo de Cálculo",
         calcResultHeader: "Resultado Calculado",
         calculateBtn: "Calcular",
@@ -266,7 +266,7 @@
         diagBtn: "Patakbuhin ang Diagnostic",
         calcTitle: "Kalkulador ng Legal na Deadline at Parusa sa Suweldo",
         calcBadge: "Awtomatikong Kalkulasyon",
-        calcSub: "Kino-compute ang mga deadline sa hukuman (CCP § 1167) at parusa sa huling suweldo (Lab. Code § 203).",
+        calcSub: "Kino-compute ang mga deadline sa hukuman (10 araw ng hukuman ayon sa CCP § 1167) at parusa sa huling suweldo (Lab. Code § 203).",
         calcTypeLabel: "Uri ng Kalkulasyon",
         calcResultHeader: "Lalabas na Resulta",
         calculateBtn: "Kalkulahin",
@@ -466,12 +466,25 @@
       const icsBtn = document.getElementById('icsBtn');
 
       if (type === 'eviction') {
-        const inputDate = document.getElementById('summonsDate').value;
-        if (!inputDate) return;
-        const d = new Date(inputDate);
-        d.setDate(d.getDate() + 5);
+        const inputDateStr = document.getElementById('summonsDate').value;
+        if (!inputDateStr) return;
+        
+        // Split date string to avoid timezone offset issues
+        const parts = inputDateStr.split('-');
+        let d = new Date(parts[0], parts[1] - 1, parts[2]);
+
+        // Calculate 10 court days (excluding Saturdays and Sundays)
+        let courtDaysAdded = 0;
+        while (courtDaysAdded < 10) {
+          d.setDate(d.getDate() + 1);
+          const day = d.getDay();
+          if (day !== 0 && day !== 6) { // 0 = Sunday, 6 = Saturday
+            courtDaysAdded++;
+          }
+        }
+
         lastCalculatedDate = d;
-        output.innerHTML = `Court Response Deadline: <span class="text-indigo-400 font-bold">${d.toDateString()}</span> (CCP § 1167)`;
+        output.innerHTML = `Court Response Deadline: <span class="text-indigo-400 font-bold">${d.toDateString()}</span> (10 Court Days per CCP § 1167)`;
         icsBtn.disabled = false;
       } else {
         const rate = parseFloat(document.getElementById('dailyRate').value || '0');
@@ -485,7 +498,7 @@
     function exportICS() {
       if (!lastCalculatedDate) return;
       const isoDate = lastCalculatedDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
-      const icsData = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Legal Court Response Deadline (CCP 1167)\nDESCRIPTION:Mandatory statutory deadline to file court response.\nDTSTART:${isoDate}\nDTEND:${isoDate}\nEND:VEVENT\nEND:VCALENDAR`;
+      const icsData = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Legal Court Response Deadline (CCP 1167)\nDESCRIPTION:Mandatory statutory deadline to file court response (10 court days).\nDTSTART:${isoDate}\nDTEND:${isoDate}\nEND:VEVENT\nEND:VCALENDAR`;
       
       const blob = new Blob([icsData], { type: 'text/calendar' });
       const url = window.URL.createObjectURL(blob);
