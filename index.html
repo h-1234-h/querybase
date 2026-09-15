@@ -1,758 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QueryBase Studio | Multi-Domain California Law Engine</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .code-font { font-family: 'JetBrains Mono', monospace; }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QueryBase Studio — California Legal Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
 
-    <!-- TOP DISCLAIMER BAR -->
-    <div class="bg-amber-500 text-slate-950 px-4 py-2 text-xs font-bold text-center flex items-center justify-center gap-2">
-        <i data-lucide="shield-alert" class="w-4 h-4 flex-shrink-0"></i>
-        <span id="txt-disclaimer">FREE LEGAL INFORMATION ENGINE — GROUNDED IN CA CIVIL CODE, LABOR CODE & CODE OF CIVIL PROCEDURE. NOT FORMAL LEGAL ADVICE.</span>
+  <!-- Top Banner Disclaimer -->
+  <div class="bg-amber-500/10 border-b border-amber-500/20 text-amber-300 text-xs py-2 px-4 text-center font-medium">
+    <span data-i18n="disclaimer">⚠️ Free legal information engine — based on Cal. Civ. Code, Cal. Lab. Code & CCP. Not formal legal advice.</span>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="p-2 bg-indigo-600 rounded-lg text-white">
+        <i data-lucide="scale" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg leading-tight">QueryBase Studio</h1>
+        <p class="text-xs text-slate-400">California Housing & Labor Law Engine</p>
+      </div>
     </div>
 
-    <!-- MAIN HEADER -->
-    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 p-2 rounded-xl text-white font-extrabold text-lg flex items-center shadow-lg shadow-indigo-500/20">
-                    <i data-lucide="cpu" class="w-5 h-5 mr-1.5"></i> QueryBase Studio
-                </div>
-                
-                <!-- CATEGORY SELECTOR DROPDOWN -->
-                <div class="relative">
-                    <select id="domain-switcher" onchange="switchDomain(this.value)" class="bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 rounded-lg px-3 py-1.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                        <option value="housing">🏡 California Housing & Tenant Law</option>
-                        <option value="labor">💼 California Labor & Employment Law</option>
-                    </select>
-                </div>
-            </div>
+    <div class="flex items-center gap-3">
+      <!-- Domain Switcher -->
+      <select id="domainSelect" onchange="switchDomain(this.value)" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <option value="labor" selected>⚖️ California Labor & Employment Law</option>
+        <option value="housing">🏠 California Housing & Tenant Rights</option>
+      </select>
 
-            <div class="flex items-center gap-3">
-                <div class="flex items-center bg-slate-900 rounded-lg p-1 border border-slate-800">
-                    <i data-lucide="globe" class="w-4 h-4 text-slate-400 ml-2 mr-1"></i>
-                    <select id="lang-switcher" onchange="switchLanguage(this.value)" class="bg-transparent text-xs font-semibold text-slate-300 focus:outline-none cursor-pointer pr-3 py-1">
-                        <option value="en" class="bg-slate-900 text-white">English (US)</option>
-                        <option value="es" class="bg-slate-900 text-white">Español (Spanish)</option>
-                        <option value="zh" class="bg-slate-900 text-white">中文 (Chinese)</option>
-                        <option value="tl" class="bg-slate-900 text-white">Tagalog (Filipino)</option>
-                    </select>
-                </div>
-            </div>
+      <!-- Language Selector -->
+      <select id="langSelect" onchange="switchLanguage(this.value)" class="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <option value="en">🌐 English</option>
+        <option value="zh">🌐 中文 (Chinese)</option>
+        <option value="es">🌐 Español</option>
+        <option value="tl">🌐 Tagalog</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="max-w-7xl mx-auto p-6 space-y-8">
+
+    <!-- Top Section: AI Query Engine & Diagnostic Panel -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- AI Query Engine Box -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 data-i18n="aiTitle" class="text-lg font-semibold flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i> Multi-Domain Legal Engine
+            </h2>
+            <span id="domainBadge" class="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">Labor Mode</span>
+          </div>
+          <p data-i18n="aiSub" class="text-xs text-slate-400 mb-4">Query issues regarding California housing ordinances or labor/employment code.</p>
+          <textarea id="userInput" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="e.g., 'My manager makes me work over 8 hours a day without overtime pay' or 'My landlord raised rent by 12%'..."></textarea>
         </div>
-    </header>
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex gap-2 text-xs">
+            <button onclick="setSample('overtime')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300" data-i18n="sampleOvertime">Overtime Pay</button>
+            <button onclick="setSample('breaks')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300" data-i18n="sampleBreaks">Meal Breaks</button>
+            <button onclick="setSample('rent')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-slate-300" data-i18n="sampleRent">Rent Increase</button>
+          </div>
+          <button onclick="analyzeIssue()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs px-4 py-2 rounded-lg flex items-center gap-2 transition" data-i18n="aiBtn">
+            Analyze Issue →
+          </button>
+        </div>
+      </div>
 
-    <!-- CONTENT WRAPPER -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <!-- Diagnostic Engine Box -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+        <h2 data-i18n="diagTitle" class="text-lg font-semibold mb-1">Legal Rights Diagnostic Engine</h2>
+        <p data-i18n="diagSub" class="text-xs text-slate-400 mb-4">Evaluate statutory compliance for your rental tenancy or employment status.</p>
 
-        <!-- MODULE 1: INTERACTIVE AI LEGAL QUESTION & DECISION MATRIX -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            <!-- Left: AI Query Hub (7 cols) -->
-            <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                    <div>
-                        <h2 id="title-qa-hub" class="text-lg font-bold text-white flex items-center gap-2">
-                            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i> Multi-Domain Legal AI Engine
-                        </h2>
-                        <p id="sub-qa-hub" class="text-xs text-slate-400 mt-0.5">Ask questions about California Housing Code or Labor & Employment Code.</p>
-                    </div>
-                    <span id="domain-badge" class="text-[10px] code-font bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-bold uppercase">HOUSING LAW MODE</span>
-                </div>
+        <div id="diagnosticControls" class="space-y-4">
+          <!-- Dynamic Form Controls populated by JS -->
+        </div>
 
-                <div class="space-y-4">
-                    <div class="relative">
-                        <textarea id="ai-user-query" rows="3" placeholder="e.g., 'My manager makes me work over 8 hours a day without overtime pay' or 'My landlord raised rent by 12%'..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 custom-scroll"></textarea>
-                    </div>
-                    
-                    <!-- Dynamic Preset Buttons Container -->
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <div id="preset-buttons-container" class="flex flex-wrap gap-1.5">
-                            <!-- Injected dynamically via JS based on selected domain -->
-                        </div>
-                        <button onclick="processAIQuery()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-lg shadow-indigo-600/30">
-                            <span id="btn-ask-text">Analyze Question</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
+        <button onclick="runDiagnostic()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs py-2.5 rounded-lg flex items-center justify-center gap-2 transition">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span data-i18n="diagBtn">Run Diagnostic</span>
+        </button>
 
-                <!-- AI Output Box -->
-                <div id="ai-result-box" class="hidden bg-slate-950 border border-indigo-500/30 rounded-xl p-5 space-y-3">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                        <span id="ai-cite-badge" class="text-[10px] code-font text-indigo-400 font-bold uppercase">Cal. Lab. Code § 510</span>
-                        <span class="text-[10px] text-slate-400">Analysis Complete</span>
-                    </div>
-                    <p id="ai-response-body" class="text-xs sm:text-sm text-slate-200 leading-relaxed"></p>
-                    <div class="pt-2">
-                        <span class="text-[11px] font-bold text-slate-400 block mb-1">Recommended Action Steps:</span>
-                        <ul id="ai-action-list" class="list-disc pl-4 space-y-1 text-xs text-slate-300"></ul>
-                    </div>
-                </div>
-            </div>
+        <!-- Output Banner -->
+        <div id="diagResult" class="hidden mt-4 p-3 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1"></div>
+      </div>
 
-            <!-- Right: Evaluator / Diagnostics Wizard (5 cols) -->
-            <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-                <div class="border-b border-slate-800 pb-3">
-                    <h2 id="wizard-title" class="text-sm font-bold text-white flex items-center gap-2">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-indigo-400"></i> Legal Rights Diagnostic Engine
-                    </h2>
-                    <p id="wizard-sub" class="text-[11px] text-slate-400">Evaluate statutory compliance for your rental tenancy or employment status.</p>
-                </div>
+    </div>
 
-                <!-- Dynamic Form Fields -->
-                <div id="wizard-steps" class="space-y-4">
-                    <!-- Injected via JS depending on category -->
-                </div>
+    <!-- Middle Section: Statutory Deadline & Wage Penalty Calculator -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+      <div class="flex items-center justify-between mb-2">
+        <h2 data-i18n="calcTitle" class="text-lg font-semibold flex items-center gap-2">
+          <i data-lucide="calculator" class="w-5 h-5 text-indigo-400"></i> Statutory Deadline & Wage Penalty Calculator
+        </h2>
+        <span class="text-[10px] font-mono text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded" data-i18n="calcBadge">Automated Calculations</span>
+      </div>
+      <p data-i18n="calcSub" class="text-xs text-slate-400 mb-6">Calculates court response deadlines (CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).</p>
 
-                <div id="wiz-result" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div id="wiz-status-badge" class="inline-block text-[10px] font-extrabold px-2 py-0.5 rounded uppercase"></div>
-                    <p id="wiz-explanation" class="text-xs text-slate-300 leading-relaxed"></p>
-                </div>
-            </div>
-        </section>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label data-i18n="calcTypeLabel" class="block text-xs font-medium text-slate-300 mb-2">Calculation Type</label>
+          <select id="calcType" onchange="updateCalcInputs()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200">
+            <option value="eviction">Unlawful Detainer Response Deadline (CCP § 1167)</option>
+            <option value="wage">Final Pay Waiting Time Penalty (Lab. Code § 203)</option>
+          </select>
+        </div>
 
-        <!-- MODULE 2: STATUTORY DEADLINE & PENALTY CALCULATOR -->
-        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-4 gap-4">
-                <div>
-                    <h2 id="calc-heading" class="text-lg font-bold text-white flex items-center gap-2">
-                        <i data-lucide="clock" class="w-5 h-5 text-indigo-400"></i> Statutory Deadline & Wage Penalty Calculator
-                    </h2>
-                    <p id="calc-subheading" class="text-xs text-slate-400 mt-0.5">Calculates court response deadlines (CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).</p>
-                </div>
-                <span class="text-[11px] code-font text-amber-400 bg-amber-400/10 px-3 py-1 rounded-md border border-amber-400/20 self-start md:self-auto">
-                    AUTOMATED CALCULATIONS
-                </span>
-            </div>
+        <!-- Dynamic Inputs -->
+        <div id="calcInputs" class="space-y-3">
+          <!-- Populated by JS -->
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="space-y-4 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div>
-                        <label id="lbl-calc-notice" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Calculation Type</label>
-                        <select id="calc-notice-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-                            <option value="ud-summons">[Housing] UD Summons Answer (10 Court Days - CCP § 1167)</option>
-                            <option value="3-day-pay">[Housing] 3-Day Notice to Pay/Quit (CCP § 1161)</option>
-                            <option value="waiting-penalty">[Labor] Final Pay Delay Penalty (Lab. Code § 203)</option>
-                            <option value="wage-claim-statute">[Labor] DLSE Wage Claim Filing Statute (Lab. Code § 98)</option>
-                        </select>
-                    </div>
+        <!-- Output Window & .ICS Export -->
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
+          <div>
+            <div data-i18n="calcResultHeader" class="text-xs text-slate-400 mb-1">Calculated Output</div>
+            <div id="calcOutput" class="text-sm font-semibold text-slate-200">Select inputs and calculate.</div>
+          </div>
+          <div class="mt-4 flex gap-2">
+            <button onclick="calculateStatutory()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-xs font-medium py-2 rounded text-white" data-i18n="calculateBtn">Calculate</button>
+            <button id="icsBtn" onclick="exportICS()" disabled class="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-xs px-3 py-2 rounded text-slate-300 flex items-center gap-1">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> .ICS
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                    <div>
-                        <label id="lbl-calc-date" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Event Date (Service / Termination)</label>
-                        <input type="date" id="calc-service-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-                    </div>
+    <!-- Bottom Section: Demand Letter Generator -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+      <div class="flex items-center justify-between mb-2">
+        <h2 data-i18n="demandTitle" class="text-lg font-semibold flex items-center gap-2">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i> Legal Demand Letter Generator
+        </h2>
+      </div>
+      <p data-i18n="demandSub" class="text-xs text-slate-400 mb-4">Generates formal, statutory-compliant demand notices locally in your browser.</p>
 
-                    <div id="labor-wage-input-container" class="hidden">
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Regular Daily Rate ($)</label>
-                        <input type="number" id="calc-daily-rate" placeholder="e.g. 200" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-                    </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-3 text-xs">
+          <div>
+            <label data-i18n="senderLabel" class="block text-slate-400 mb-1">Your Full Name (Sender)</label>
+            <input type="text" id="senderName" placeholder="e.g. Jane Doe" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label data-i18n="recipientLabel" class="block text-slate-400 mb-1">Recipient Name (Employer/Landlord)</label>
+            <input type="text" id="recipientName" placeholder="e.g. Acme Corp / Property Management" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200">
+          </div>
+          <div>
+            <label data-i18n="claimAmountLabel" class="block text-slate-400 mb-1">Total Amount Demanded ($)</label>
+            <input type="number" id="claimAmount" placeholder="e.g. 2400" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-slate-200">
+          </div>
+          <button onclick="generateLetter()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded transition" data-i18n="generateBtn">
+            Generate Notice
+          </button>
+        </div>
 
-                    <button onclick="calculateStatutoryDeadline()" id="btn-calc-execute" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
-                        <i data-lucide="calculator" class="w-4 h-4"></i> Calculate Legal Deadline / Penalty
-                    </button>
-                </div>
+        <div>
+          <textarea id="letterOutput" readonly rows="8" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-300 resize-none" placeholder="Generated legal demand letter will appear here..."></textarea>
+        </div>
+      </div>
+    </div>
 
-                <!-- Display Output -->
-                <div class="md:col-span-2 bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <div id="calc-result-display" class="space-y-3">
-                        <div class="text-xs text-slate-500">Select parameters to compute legal deadlines or wage penalties.</div>
-                    </div>
-                    
-                    <div id="ics-export-wrapper" class="hidden pt-4 border-t border-slate-800 flex items-center justify-between">
-                        <span class="text-xs text-slate-400">Save event directly to your personal calendar:</span>
-                        <button onclick="downloadDeadlineICS()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export .ICS
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+  </main>
 
-        <!-- MODULE 3: AUTOMATED LEGAL DEMAND LETTER GENERATOR -->
-        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
-            <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
-                <div>
-                    <h2 id="doc-title" class="text-lg font-bold text-white flex items-center gap-2">
-                        <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i> Multi-Domain Statutory Demand Letter Generator
-                    </h2>
-                    <p id="doc-sub" class="text-xs text-slate-400 mt-0.5">Generate pre-formatted legal notice responses citing California Civil Code & Labor Code.</p>
-                </div>
-            </div>
+  <!-- Embedded JS Engine -->
+  <script>
+    let currentDomain = 'labor';
+    let currentLang = 'en';
+    let lastCalculatedDate = null;
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                    <div>
-                        <label id="lbl-doc-type" class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Select Template</label>
-                        <select id="doc-template" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-                            <!-- Injected via JS based on selected domain -->
-                        </select>
-                    </div>
+    const TRANSLATIONS = {
+      en: {
+        disclaimer: "⚠️ Free legal information engine — based on Cal. Civ. Code, Cal. Lab. Code & CCP. Not formal legal advice.",
+        aiTitle: "Multi-Domain Legal Engine",
+        aiSub: "Query California housing or labor and employment law issues.",
+        aiBtn: "Analyze Issue →",
+        sampleOvertime: "Overtime Pay",
+        sampleBreaks: "Meal Breaks",
+        sampleRent: "Rent Increase",
+        diagTitle: "Legal Rights Diagnostic Engine",
+        diagSub: "Evaluate statutory compliance for your rental tenancy or employment status.",
+        diagBtn: "Run Diagnostic",
+        calcTitle: "Statutory Deadline & Wage Penalty Calculator",
+        calcBadge: "Automated Calculations",
+        calcSub: "Calculates court response deadlines (CCP § 1167) and Labor Code waiting time penalties (Lab. Code § 203).",
+        calcTypeLabel: "Calculation Type",
+        calcResultHeader: "Calculated Output",
+        calculateBtn: "Calculate",
+        demandTitle: "Legal Demand Letter Generator",
+        demandSub: "Generates formal, statutory-compliant demand notices locally in your browser.",
+        senderLabel: "Your Full Name (Sender)",
+        recipientLabel: "Recipient Name (Employer/Landlord)",
+        claimAmountLabel: "Total Amount Demanded ($)",
+        generateBtn: "Generate Notice"
+      },
+      zh: {
+        disclaimer: "⚠️ 免费法律信息引擎 — 基于加州民法典、劳动法典及民事诉讼法典。不构成正式法律建议。",
+        aiTitle: "多领域法律 AI 引擎",
+        aiSub: "咨询有关加州住房法案或劳动与就业法案的问题。",
+        aiBtn: "分析法律问题 →",
+        sampleOvertime: "加班费",
+        sampleBreaks: "用餐休息",
+        sampleRent: "租金上涨",
+        diagTitle: "法律权益诊断引擎",
+        diagSub: "评估您的租赁关系或雇佣状态是否符合法定标准。",
+        diagBtn: "运行法律诊断",
+        calcTitle: "法定截止日期与工资罚金计算器",
+        calcBadge: "自动精确计算",
+        calcSub: "计算法院答辩截止日期 (CCP § 1167) 及加州劳动法滞纳工资罚金 (Lab. Code § 203)。",
+        calcTypeLabel: "计算类型",
+        calcResultHeader: "计算结果",
+        calculateBtn: "立即计算",
+        demandTitle: "法定催款/要求函生成器",
+        demandSub: "在浏览器本地生成符合法定规范的正式要求函。",
+        senderLabel: "您的姓名 (发件人)",
+        recipientLabel: "接收方姓名 (雇主/房东)",
+        claimAmountLabel: "索赔总金额 ($)",
+        generateBtn: "生成正式函件"
+      },
+      es: {
+        disclaimer: "⚠️ Motor de información legal gratuita — Basado en los Códigos de California. No es asesoramiento legal formal.",
+        aiTitle: "Motor IA Legal Multidominio",
+        aiSub: "Consulte cuestiones sobre la ley de vivienda o laboral de California.",
+        aiBtn: "Analizar Asunto Legal →",
+        sampleOvertime: "Pago de Horas Extra",
+        sampleBreaks: "Descansos para Comer",
+        sampleRent: "Aumento de Renta",
+        diagTitle: "Motor de Diagnóstico de Derechos Legales",
+        diagSub: "Evalúe el cumplimiento legal de su arrendamiento o estado laboral.",
+        diagBtn: "Ejecutar Diagnóstico",
+        calcTitle: "Calculadora de Plazos Legales y Sanciones Salariales",
+        calcBadge: "Cálculos Automatizados",
+        calcSub: "Calcula los plazos de respuesta judicial (CCP § 1167) y sanciones por demora salarial (Lab. Code § 203).",
+        calcTypeLabel: "Tipo de Cálculo",
+        calcResultHeader: "Resultado Calculado",
+        calculateBtn: "Calcular",
+        demandTitle: "Generador de Cartas de Reclamación Legal",
+        demandSub: "Genera notificaciones de reclamación formales directamente en su navegador.",
+        senderLabel: "Su Nombre Completo (Remitente)",
+        recipientLabel: "Nombre del Destinatario (Empleador/Propietario)",
+        claimAmountLabel: "Monto Total Reclamado ($)",
+        generateBtn: "Generar Notificación"
+      },
+      tl: {
+        disclaimer: "⚠️ Libreng impormasyong legal — Batay sa California Law. Hindi pormal na legal advice.",
+        aiTitle: "Multi-Domain Legal AI Engine",
+        aiSub: "Magtanong tungkol sa batas sa pabahay o paggawa sa California.",
+        aiBtn: "Suriin ang Legal na Isyu →",
+        sampleOvertime: "Bayad sa Overtime",
+        sampleBreaks: "Break sa Pagkain",
+        sampleRent: "Pagtaas ng Renta",
+        diagTitle: "Engine para sa Pagsusuri ng Legal na Karapatan",
+        diagSub: "Suriin ang pagsunod sa batas para sa iyong pagrenta o trabaho.",
+        diagBtn: "Patakbuhin ang Diagnostic",
+        calcTitle: "Kalkulador ng Legal na Deadline at Parusa sa Suweldo",
+        calcBadge: "Awtomatikong Kalkulasyon",
+        calcSub: "Kino-compute ang mga deadline sa hukuman (CCP § 1167) at parusa sa huling suweldo (Lab. Code § 203).",
+        calcTypeLabel: "Uri ng Kalkulasyon",
+        calcResultHeader: "Lalabas na Resulta",
+        calculateBtn: "Kalkulahin",
+        demandTitle: "Tagalikha ng Liham ng Legal na Demand",
+        demandSub: "Gumagawa ng pormal at legal na liham sa iyong browser.",
+        senderLabel: "Iyong Buong Pangalan (Nagmula)",
+        recipientLabel: "Pangalan ng Tumatanggap (Employer/Landlord)",
+        claimAmountLabel: "Kabuuan ng Halagang Hinihingi ($)",
+        generateBtn: "Likhain ang Liham"
+      }
+    };
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label id="lbl-sender-name" class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Your Name (Tenant/Employee)</label>
-                            <input type="text" id="doc-tenant-name" placeholder="Jane Doe" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                        <div>
-                            <label id="lbl-recipient-name" class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Recipient Name (Landlord/Employer)</label>
-                            <input type="text" id="doc-landlord-name" placeholder="Acme Corp / John Smith" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white">
-                        </div>
-                    </div>
+    function init() {
+      lucide.createIcons();
+      renderDiagnosticControls();
+      updateCalcInputs();
+    }
 
-                    <button onclick="generateLegalLetter()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-indigo-400 font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5">
-                        <i data-lucide="file-plus" class="w-4 h-4"></i> Generate Draft Letter
-                    </button>
-                </div>
+    function switchDomain(domain) {
+      currentDomain = domain;
+      const badge = document.getElementById('domainBadge');
+      if(domain === 'labor') {
+        badge.textContent = 'Labor Mode';
+        badge.className = 'text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded';
+      } else {
+        badge.textContent = 'Housing Mode';
+        badge.className = 'text-[10px] font-mono uppercase bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded';
+      }
+      renderDiagnosticControls();
+    }
 
-                <!-- Letter Preview Box -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
-                    <pre id="letter-preview" class="code-font text-[11px] text-slate-300 whitespace-pre-wrap leading-relaxed custom-scroll h-48 overflow-y-auto">Select template and click 'Generate Draft Letter'...</pre>
-                    <div class="pt-3 border-t border-slate-800 flex justify-end">
-                        <button onclick="copyLetter()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded text-xs flex items-center gap-1.5 transition-colors">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Text
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+    function switchLanguage(lang) {
+      if (!TRANSLATIONS[lang]) return;
+      currentLang = lang;
 
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        <p>QueryBase Studio — Open Access California Housing & Labor Law Engine</p>
-    </footer>
-
-    <!-- LOGIC SYSTEM -->
-    <script>
-        let currentDomain = 'housing'; // 'housing' or 'labor'
-        let calculatedEvent = null;
-
-        const TRANSLATIONS = {
-            en: {
-                disclaimer: "FREE LEGAL INFORMATION ENGINE — GROUNDED IN CA CIVIL CODE, LABOR CODE & CODE OF CIVIL PROCEDURE. NOT FORMAL LEGAL ADVICE.",
-                qaTitle: "Multi-Domain Legal AI Engine",
-                qaSub: "Ask questions about California Housing Code or Labor & Employment Code.",
-                askBtn: "Analyze Question"
-            },
-            es: {
-                disclaimer: "MOTOR DE INFORMACIÓN LEGAL GRATUITO — BASADO EN EL CÓDIGO CIVIL Y CÓDIGO DE TRABAJO DE CALIFORNIA. NO ES ASESORAMIENTO FORMAL.",
-                qaTitle: "Motor de IA Legal Multidominio",
-                qaSub: "Haga preguntas sobre el Código de Vivienda o el Código Laboral de California.",
-                askBtn: "Analizar Pregunta"
-            },
-            zh: {
-                disclaimer: "免费法律信息引擎 — 基于加州民法典、劳动法典及民事诉讼法典。不构成正式法律建议。",
-                qaTitle: "多领域法律 AI 引擎",
-                qaSub: "咨询有关加州住房法案或劳动与就业法案的问题。",
-                askBtn: "分析法律问题"
-            },
-            tl: {
-                disclaimer: "LIBRENG LEGAL INFORMATION ENGINE — BATAY SA CA CIVIL CODE, LABOR CODE & CCP. HINDI PORMAL NA LEGAL ADVICE.",
-                qaTitle: "Multi-Domain Legal AI Engine",
-                qaSub: "Magtanong tungkol sa California Housing Code o Labor & Employment Code.",
-                askBtn: "Suriin ang Tanong"
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide) lucide.createIcons();
-            document.getElementById('calc-service-date').value = new Date().toISOString().split('T')[0];
-            
-            // Toggle container for daily rate input based on calculation selection
-            document.getElementById('calc-notice-type').addEventListener('change', (e) => {
-                const container = document.getElementById('labor-wage-input-container');
-                if (e.target.value === 'waiting-penalty') {
-                    container.classList.remove('hidden');
-                } else {
-                    container.classList.add('hidden');
-                }
-            });
-
-            renderDomainUI();
-        });
-
-        function switchDomain(domain) {
-            currentDomain = domain;
-            renderDomainUI();
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang][key]) {
+          el.textContent = TRANSLATIONS[lang][key];
         }
+      });
+    }
 
-        function renderDomainUI() {
-            const badge = document.getElementById('domain-badge');
-            const presetContainer = document.getElementById('preset-buttons-container');
-            const wizSteps = document.getElementById('wizard-steps');
-            const docTemplate = document.getElementById('doc-template');
+    function renderDiagnosticControls() {
+      const container = document.getElementById('diagnosticControls');
+      if (currentDomain === 'labor') {
+        container.innerHTML = `
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Employment Classification</label>
+            <select id="diagEmpType" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+              <option value="nonexempt">Hourly Non-Exempt (Overtime & Break Protections Apply)</option>
+              <option value="exempt">Salaried Exempt</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Work Schedule Issue</label>
+            <select id="diagIssue" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+              <option value="ot8">Worked >8 hours in a single workday</option>
+              <option value="nobreak">Denied 30-min meal break during 5+ hr shift</option>
+            </select>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Property Type</label>
+            <select id="diagPropType" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+              <option value="multi">Multi-Unit Multi-Family (Built >15 Years Ago)</option>
+              <option value="single">Single Family Home / Condo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Proposed Rent Increase (%)</label>
+            <input type="number" id="diagRentPct" placeholder="e.g. 10" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200" />
+          </div>
+        `;
+      }
+    }
 
-            if (currentDomain === 'housing') {
-                badge.textContent = "HOUSING LAW MODE";
-                badge.className = "text-[10px] code-font bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-bold uppercase";
+    function runDiagnostic() {
+      const res = document.getElementById('diagResult');
+      res.classList.remove('hidden');
 
-                presetContainer.innerHTML = `
-                    <button onclick="fillPreset(1)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Rent Cap</button>
-                    <button onclick="fillPreset(2)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Deposits</button>
-                    <button onclick="fillPreset(3)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Habitability</button>
-                    <button onclick="fillPreset(4)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Landlord Entry</button>
-                `;
-
-                wizSteps.innerHTML = `
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Property Age</label>
-                        <select id="wiz-age" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="older15">Built more than 15 years ago (Covered)</option>
-                            <option value="newer15">Built in the last 15 years (Exempt)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Property Type</label>
-                        <select id="wiz-type" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="apt">Multi-Unit Apartment Building</option>
-                            <option value="sfr-corp">Single-Family Home (Corporate Owned)</option>
-                            <option value="sfr-indiv">Single-Family Home (Individual Owner)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tenancy Duration</label>
-                        <select id="wiz-tenure" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="12plus">12 months or longer (Just Cause Applies)</option>
-                            <option value="under12">Less than 12 months</option>
-                        </select>
-                    </div>
-                    <button onclick="runAB1482Diagnosis()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-indigo-400 font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
-                        <i data-lucide="file-search" class="w-4 h-4"></i> Run AB 1482 Housing Diagnostic
-                    </button>
-                `;
-
-                docTemplate.innerHTML = `
-                    <option value="unlawful-rent">Contest Unlawful Rent Increase (Cal. Civ. Code § 1947.12)</option>
-                    <option value="repair-request">Demand Habitability Repairs (Cal. Civ. Code § 1941.1)</option>
-                    <option value="privacy-notice">Objection to Improper Entry (Cal. Civ. Code § 1954)</option>
-                `;
-
-            } else { // Labor Mode
-                badge.textContent = "LABOR & EMPLOYMENT MODE";
-                badge.className = "text-[10px] code-font bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold uppercase";
-
-                presetContainer.innerHTML = `
-                    <button onclick="fillPreset(101)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Overtime Pay</button>
-                    <button onclick="fillPreset(102)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Meal & Rest Breaks</button>
-                    <button onclick="fillPreset(103)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Final Paycheck</button>
-                    <button onclick="fillPreset(104)" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700">Expense Reimbursement</button>
-                `;
-
-                wizSteps.innerHTML = `
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Employment Classification</label>
-                        <select id="wiz-emp-type" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="non-exempt">Hourly Non-Exempt Employee (Overtime / Break Protections Apply)</option>
-                            <option value="exempt">Salaried Exempt Executive / Professional</option>
-                            <option value="1099">Independent Contractor (1099)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Work Schedule Issue</label>
-                        <select id="wiz-emp-issue" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="ot-8hr">Worked >8 Hours in a Single Workday</option>
-                            <option value="meal-missed">Worked >5 Hours without 30-Min Unpaid Meal Break</option>
-                            <option value="final-delay">Terminated but Final Paycheck Delayed >24 Hours</option>
-                        </select>
-                    </div>
-                    <button onclick="runLaborDiagnosis()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 font-bold py-2.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-2">
-                        <i data-lucide="briefcase" class="w-4 h-4"></i> Run Labor Code Diagnostic
-                    </button>
-                `;
-
-                docTemplate.innerHTML = `
-                    <option value="final-pay-demand">Demand for Unpaid Wages & Waiting Time Penalty (Cal. Lab. Code §§ 201-203)</option>
-                    <option value="break-penalty-demand">Demand for Unpaid Meal & Rest Break Premiums (Cal. Lab. Code § 226.7)</option>
-                    <option value="expense-reimburse-demand">Demand for Remote Work & Cell Phone Reimbursement (Cal. Lab. Code § 2802)</option>
-                `;
-            }
-
-            document.getElementById('ai-result-box').classList.add('hidden');
-            if (window.lucide) lucide.createIcons();
+      if (currentDomain === 'labor') {
+        const emp = document.getElementById('diagEmpType').value;
+        const issue = document.getElementById('diagIssue').value;
+        if (emp === 'nonexempt' && issue === 'ot8') {
+          res.innerHTML = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED:</span> Under Cal. Lab. Code § 510, non-exempt employees are entitled to 1.5x pay for hours worked over 8 in a single workday.`;
+        } else if (emp === 'nonexempt' && issue === 'nobreak') {
+          res.innerHTML = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED:</span> Under Cal. Lab. Code § 226.7, failure to provide meal breaks incurs a 1-hour premium pay penalty per violation.`;
+        } else {
+          res.innerHTML = `<span class="text-amber-400 font-bold">EVALUATION:</span> Exempt status may exclude employee from statutory daily overtime premiums.`;
         }
-
-        function switchLanguage(lang) {
-            const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
-            document.getElementById('txt-disclaimer').textContent = t.disclaimer;
-            document.getElementById('title-qa-hub').innerHTML = `<i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i> ${t.qaTitle}`;
-            document.getElementById('sub-qa-hub').textContent = t.qaSub;
-            document.getElementById('btn-ask-text').textContent = t.askBtn;
-            if (window.lucide) lucide.createIcons();
+      } else {
+        const prop = document.getElementById('diagPropType').value;
+        const pct = parseFloat(document.getElementById('diagRentPct').value || '0');
+        if (prop === 'multi' && pct > 8.8) {
+          res.innerHTML = `<span class="text-amber-400 font-bold">POTENTIAL AB 1482 VIOLATION:</span> Increases above CPI + 5% (capped at 10%) violate statutory caps under Cal. Civ. Code § 1947.12.`;
+        } else {
+          res.innerHTML = `<span class="text-emerald-400 font-bold">COMPLIANT:</span> Rent increase falls within expected statutory thresholds or property type is exempt.`;
         }
+      }
+    }
 
-        // --- AI QUERY HUB LOGIC FOR HOUSING & LABOR ---
-        function processAIQuery() {
-            const query = document.getElementById('ai-user-query').value.trim();
-            if (!query) return;
+    function setSample(type) {
+      const area = document.getElementById('userInput');
+      if (type === 'overtime') area.value = "I worked 11 hours yesterday but my employer paid me my standard hourly rate for all hours.";
+      if (type === 'breaks') area.value = "I work 8 hour shifts with no uninterrupted meal breaks allowed.";
+      if (type === 'rent') area.value = "My landlord sent a notice raising rent by 12% starting next month in an apartment built in 1998.";
+    }
 
-            const box = document.getElementById('ai-result-box');
-            const body = document.getElementById('ai-response-body');
-            const list = document.getElementById('ai-action-list');
-            const badge = document.getElementById('ai-cite-badge');
+    function analyzeIssue() {
+      const input = document.getElementById('userInput').value.toLowerCase();
+      if (!input) return;
+      if (input.includes('overtime') || input.includes('hours')) switchDomain('labor');
+      if (input.includes('rent') || input.includes('landlord')) switchDomain('housing');
+      runDiagnostic();
+    }
 
-            box.classList.remove('hidden');
-            const lower = query.toLowerCase();
+    function updateCalcInputs() {
+      const type = document.getElementById('calcType').value;
+      const container = document.getElementById('calcInputs');
+      if (type === 'eviction') {
+        container.innerHTML = `
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Service Date of Summons</label>
+            <input type="date" id="summonsDate" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Daily Wage Rate ($)</label>
+            <input type="number" id="dailyRate" placeholder="e.g. 200" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Days Delayed (Max 30)</label>
+            <input type="number" id="daysLate" placeholder="e.g. 15" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-slate-200">
+          </div>
+        `;
+      }
+    }
 
-            // LABOR & EMPLOYMENT TOPICS
-            if (lower.includes('overtime') || lower.includes('double time') || lower.includes('8 hour') || lower.includes('510')) {
-                badge.textContent = "Cal. Lab. Code § 510";
-                body.textContent = "California requires non-exempt employees to be paid 1.5x their regular rate for work exceeding 8 hours in a workday or 40 hours in a workweek, and 2x after 12 hours in a workday or after 8 hours on the 7th consecutive day.";
-                list.innerHTML = `
-                    <li>Track all shift start and end times in an independent daily log.</li>
-                    <li>Review itemized paystubs (Lab. Code § 226) for accurate rate reporting.</li>
-                    <li>Submit a formal written wage audit request to HR or file a DLSE wage claim.</li>`;
+    function calculateStatutory() {
+      const type = document.getElementById('calcType').value;
+      const output = document.getElementById('calcOutput');
+      const icsBtn = document.getElementById('icsBtn');
 
-            } else if (lower.includes('meal') || lower.includes('rest break') || lower.includes('lunch') || lower.includes('226.7')) {
-                badge.textContent = "Cal. Lab. Code § 226.7 & IWC Orders";
-                body.textContent = "Employers must provide an uninterrupted 30-minute unpaid meal break before the end of the 5th hour of work, plus a paid 10-minute rest break for every 4 hours worked. Failure to provide compliant breaks requires paying 1 hour of premium pay per missed break.";
-                list.innerHTML = `
-                    <li>Record exact times breaks were interrupted, delayed, or missed.</li>
-                    <li>Request 1-hour premium pay for each non-compliant break.</li>
-                    <li>File a claim with the Labor Commissioner if premiums are withheld.</li>`;
+      if (type === 'eviction') {
+        const inputDate = document.getElementById('summonsDate').value;
+        if (!inputDate) return;
+        const d = new Date(inputDate);
+        d.setDate(d.getDate() + 5); // CCP § 1167 5-day response rule
+        lastCalculatedDate = d;
+        output.innerHTML = `Court Response Deadline: <span class="text-indigo-400 font-bold">${d.toDateString()}</span> (CCP § 1167)`;
+        icsBtn.disabled = false;
+      } else {
+        const rate = parseFloat(document.getElementById('dailyRate').value || '0');
+        const days = Math.min(parseFloat(document.getElementById('daysLate').value || '0'), 30);
+        const total = rate * days;
+        output.innerHTML = `Waiting Time Penalty: <span class="text-emerald-400 font-bold">$${total.toFixed(2)}</span> (${days} days @ $${rate}/day under Lab. Code § 203)`;
+        icsBtn.disabled = true;
+      }
+    }
 
-            } else if (lower.includes('final pay') || lower.includes('fired') || lower.includes('quit') || lower.includes('termination pay') || lower.includes('201') || lower.includes('203')) {
-                badge.textContent = "Cal. Lab. Code §§ 201–203";
-                body.textContent = "Upon discharge/firing, final wages must be paid immediately on the day of termination. If an employee resigns with 72 hours notice, wages are due on their last day. Willful failure to pay yields Waiting Time Penalties of up to 30 days of full regular daily pay under § 203.";
-                list.innerHTML = `
-                    <li>Calculate your regular daily pay rate (Hourly Rate × Hours Worked per Day).</li>
-                    <li>Send a formal written demand letter citing Cal. Lab. Code § 203 penalties.</li>
-                    <li>File a Wage Claim with the Labor Commissioner (DLSE Form 1).</li>`;
+    function exportICS() {
+      if (!lastCalculatedDate) return;
+      const isoDate = lastCalculatedDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+      const icsData = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Legal Court Response Deadline (CCP 1167)\nDESCRIPTION:Mandatory statutory deadline to file court response.\nDTSTART:${isoDate}\nDTEND:${isoDate}\nEND:VEVENT\nEND:VCALENDAR`;
+      
+      const blob = new Blob([icsData], { type: 'text/calendar' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'court-deadline.ics';
+      a.click();
+    }
 
-            } else if (lower.includes('expense') || lower.includes('cell phone') || lower.includes('remote') || lower.includes('2802')) {
-                badge.textContent = "Cal. Lab. Code § 2802";
-                body.textContent = "Employers must reimburse employees for all necessary expenditures incurred in direct consequence of discharge of their duties (including mandatory personal cell phone usage, home internet for remote work, and required uniforms/tools).";
-                list.innerHTML = `
-                    <li>Itemize home internet, cell phone bills, and work-related purchases.</li>
-                    <li>Submit expense reports detailing business use percentages.</li>
-                    <li>Cite Cal. Lab. Code § 2802 in formal reimbursement requests.</li>`;
+    function generateLetter() {
+      const sender = document.getElementById('senderName').value || '[Your Name]';
+      const recipient = document.getElementById('recipientName').value || '[Recipient Name]';
+      const amount = document.getElementById('claimAmount').value || '0.00';
 
-            // HOUSING TOPICS
-            } else if (lower.includes('repair') || lower.includes('mold') || lower.includes('heat') || lower.includes('1941')) {
-                badge.textContent = "Cal. Civ. Code § 1941.1 & § 1942";
-                body.textContent = "Under Cal. Civ. Code § 1941.1, landlords must maintain units in a fit condition for human habitation (working plumbing, heat, weatherproofing, structural safety, and freedom from mold/pests).";
-                list.innerHTML = `
-                    <li>Send formal written notice detailing necessary repairs.</li>
-                    <li>Document defects thoroughly with dated photographs or videos.</li>
-                    <li>Contact municipal code enforcement if health hazards persist.</li>`;
+      document.getElementById('letterOutput').value = 
+`FORMAL DEMAND FOR COMPLIANCE / PAYMENT
 
-            } else if (lower.includes('rent') || lower.includes('increase') || lower.includes('1947.12')) {
-                badge.textContent = "Cal. Civ. Code § 1947.12";
-                body.textContent = "Under AB 1482 (Cal. Civ. Code § 1947.12), annual rent increases for covered properties constructed more than 15 years ago are strictly capped at 5% plus regional CPI (up to a 10% maximum).";
-                list.innerHTML = `
-                    <li>Verify if property is older than 15 years to confirm coverage.</li>
-                    <li>Issue a formal written notice contesting any over-cap increase.</li>`;
-
-            } else {
-                badge.textContent = "GENERAL CALIFORNIA LAW QUERY";
-                body.textContent = "Query received. Please ensure your query specifies details regarding California Landlord-Tenant law or Labor & Employment regulations for precise statutory analysis.";
-                list.innerHTML = `<li>Provide specific details like dates, hours worked, or notice types for detailed results.</li>`;
-            }
-
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function fillPreset(type) {
-            const input = document.getElementById('ai-user-query');
-            if (type === 1) input.value = "My landlord raised rent by 12% this year. Is this permitted under California law?";
-            if (type === 2) input.value = "How long does a landlord have to return a security deposit after move-out under Cal. Civ. Code § 1950.5?";
-            if (type === 3) input.value = "My landlord hasn't repaired the broken plumbing for two weeks. What are my rights under Cal. Civ. Code § 1941.1?";
-            if (type === 4) input.value = "Can my landlord enter my apartment without giving 24 hours written notice under Cal. Civ. Code § 1954?";
-            
-            if (type === 101) input.value = "I worked 10 hours on Tuesday and 14 hours on Wednesday. How is overtime calculated under Cal. Lab. Code § 510?";
-            if (type === 102) input.value = "My boss doesn't let us take meal breaks until 7 hours into our shift. Is this legal under Cal. Lab. Code § 226.7?";
-            if (type === 103) input.value = "I was fired yesterday but my employer says final paychecks are issued on regular payday. Is that legal under Labor Code § 201?";
-            if (type === 104) input.value = "My employer requires me to use my personal cell phone for work but doesn't reimburse me. Is this illegal under Lab. Code § 2802?";
-            
-            processAIQuery();
-        }
-
-        // --- DIAGNOSTICS LOGIC ---
-        function runAB1482Diagnosis() {
-            const age = document.getElementById('wiz-age').value;
-            const type = document.getElementById('wiz-type').value;
-            const resBox = document.getElementById('wiz-result');
-            const badge = document.getElementById('wiz-status-badge');
-            const exp = document.getElementById('wiz-explanation');
-
-            resBox.classList.remove('hidden');
-            if (age === 'newer15') {
-                badge.className = "inline-block text-[10px] font-extrabold px-2 py-0.5 rounded uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20";
-                badge.textContent = "EXEMPT (NEW CONSTRUCTION)";
-                exp.textContent = "Properties constructed within the last 15 years are exempt from AB 1482 rent caps and just cause provisions under Cal. Civ. Code § 1947.12(e)(2).";
-            } else {
-                badge.className = "inline-block text-[10px] font-extrabold px-2 py-0.5 rounded uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-                badge.textContent = "COVERED BY AB 1482";
-                exp.textContent = "This tenancy is subject to statutory rent increase caps and Just Cause eviction protections under Cal. Civ. Code §§ 1946.2 & 1947.12.";
-            }
-        }
-
-        function runLaborDiagnosis() {
-            const empType = document.getElementById('wiz-emp-type').value;
-            const issue = document.getElementById('wiz-emp-issue').value;
-            const resBox = document.getElementById('wiz-result');
-            const badge = document.getElementById('wiz-status-badge');
-            const exp = document.getElementById('wiz-explanation');
-
-            resBox.classList.remove('hidden');
-
-            if (empType === 'exempt') {
-                badge.className = "inline-block text-[10px] font-extrabold px-2 py-0.5 rounded uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20";
-                badge.textContent = "EXEMPT STATUS (LIMITED OT/BREAK REMEDIES)";
-                exp.textContent = "Bona fide administrative, executive, or professional exempt employees are generally exempt from statutory overtime pay and meal/rest break rules.";
-            } else {
-                badge.className = "inline-block text-[10px] font-extrabold px-2 py-0.5 rounded uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-                badge.textContent = "NON-EXEMPT: STATUTORY VIOLATION INDICATED";
-                if (issue === 'ot-8hr') exp.textContent = "Non-exempt employees working >8 hours in a workday are entitled to 1.5x regular pay under Cal. Lab. Code § 510.";
-                if (issue === 'meal-missed') exp.textContent = "Meal breaks must commence prior to the end of the 5th hour of work. Missed/late breaks require 1 hour of premium pay under § 226.7.";
-                if (issue === 'final-delay') exp.textContent = "Fired employees must receive final pay immediately. Failure triggers up to 30 days of daily wage penalties under § 203.";
-            }
-        }
-
-        // --- STATUTORY DEADLINE CALCULATOR (HOUSING & LABOR) ---
-        function calculateStatutoryDeadline() {
-            const type = document.getElementById('calc-notice-type').value;
-            const dateStr = document.getElementById('calc-service-date').value;
-            if (!dateStr) return;
-
-            const base = new Date(dateStr + 'T00:00:00');
-            let resDate = new Date(base);
-            let title = "";
-            let cite = "";
-            let desc = "";
-
-            if (type === 'waiting-penalty') {
-                const dailyRate = parseFloat(document.getElementById('calc-daily-rate').value) || 0;
-                const now = new Date();
-                const diffDays = Math.min(30, Math.floor((now - base) / (1000 * 60 * 60 * 24)));
-                const penaltyTotal = diffDays * dailyRate;
-
-                title = "Waiting Time Penalty Assessment";
-                cite = "Cal. Lab. Code § 203";
-                desc = `Your final paycheck has been delayed by ${diffDays} day(s) (capped at 30 days maximum). At a daily rate of $${dailyRate.toFixed(2)}, statutory waiting penalties equal approximately $${penaltyTotal.toFixed(2)}.`;
-                
-                resDate = now;
-
-            } else if (type === 'ud-summons') {
-                title = "Unlawful Detainer Answer Deadline";
-                cite = "CCP § 1167";
-                desc = "10 COURT DAYS (excluding weekends and court holidays) to file an Answer (Form UD-105) after service.";
-                let added = 0;
-                while (added < 10) {
-                    resDate.setDate(resDate.getDate() + 1);
-                    if (resDate.getDay() !== 0 && resDate.getDay() !== 6) added++;
-                }
-
-            } else if (type === '3-day-pay') {
-                title = "3-Day Notice Expiration";
-                cite = "CCP § 1161(2)";
-                desc = "3 court days excluding weekends and judicial holidays.";
-                let added = 0;
-                while (added < 3) {
-                    resDate.setDate(resDate.getDate() + 1);
-                    if (resDate.getDay() !== 0 && resDate.getDay() !== 6) added++;
-                }
-
-            } else if (type === 'wage-claim-statute') {
-                title = "Labor Commissioner Wage Claim Deadline";
-                cite = "Cal. Code Civ. Proc. § 338 / Lab. Code § 98";
-                desc = "Statute of limitations for filing wage claims (3 years for statutory unpaid wages/penalties, 4 years for breach of written contract).";
-                resDate.setFullYear(resDate.getFullYear() + 3);
-            }
-
-            calculatedEvent = { title, resDate, cite };
-            const display = document.getElementById('calc-result-display');
-
-            display.innerHTML = `
-                <div class="flex items-start justify-between border-b border-slate-800 pb-3">
-                    <div>
-                        <span class="text-[10px] font-bold code-font text-indigo-400 uppercase">${cite}</span>
-                        <h3 class="text-xl font-extrabold text-white mt-0.5">${title}</h3>
-                    </div>
-                    <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold px-2.5 py-1 rounded">DATE / EXPIRATION: ${resDate.toDateString()}</span>
-                </div>
-                <p class="text-xs text-slate-300 leading-relaxed">${desc}</p>
-            `;
-
-            document.getElementById('ics-export-wrapper').classList.remove('hidden');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function downloadDeadlineICS() {
-            if (!calculatedEvent) return;
-            const dateStr = calculatedEvent.resDate.toISOString().replace(/-|:|\.\d\d\d/g, "").substring(0, 8);
-            const icsData = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//QueryBase California Law Engine//EN
-BEGIN:VEVENT
-SUMMARY:LEGAL DEADLINE: ${calculatedEvent.title}
-DESCRIPTION:Authority: ${calculatedEvent.cite}
-DTSTART;VALUE=DATE:${dateStr}
-DTEND;VALUE=DATE:${dateStr}
-END:VEVENT
-END:VCALENDAR`;
-
-            const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', `legal-deadline-${dateStr}.ics`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // --- MULTI-DOMAIN DEMAND LETTER GENERATOR ---
-        function generateLegalLetter() {
-            const type = document.getElementById('doc-template').value;
-            const sender = document.getElementById('doc-tenant-name').value.trim() || '[Your Name]';
-            const recipient = document.getElementById('doc-landlord-name').value.trim() || '[Company / Landlord / Employer Name]';
-            const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            const preview = document.getElementById('letter-preview');
-
-            if (type === 'unlawful-rent') {
-                preview.textContent = 
-`DATE: ${today}
+DATE: ${new Date().toLocaleDateString()}
 
 TO: ${recipient}
 FROM: ${sender}
 
-RE: NOTICE OF UNLAWFUL RENT INCREASE — CALIFORNIA CIVIL CODE § 1947.12
+RE: DEMAND FOR STATUTORY COMPLIANCE AND REMITTANCE OF $${amount}
 
-Dear ${recipient},
+To Whom It May Concern,
 
-I am writing to formally object to the recent notice of rent increase provided for my tenancy. Under California Civil Code § 1947.12 (Tenant Protection Act), annual rent increases for covered properties are capped at 5% plus regional CPI. The proposed increase exceeds statutory allowances.
+This letter serves as formal written demand regarding outstanding statutory obligations governed by California law. 
 
-Please provide a revised notice that complies strictly with California Civil Code § 1947.12.
-
-Sincerely,
-
-${sender}`;
-
-            } else if (type === 'repair-request') {
-                preview.textContent = 
-`DATE: ${today}
-
-TO: ${recipient}
-FROM: ${sender}
-
-RE: NOTICE OF IMPAIRMENT TO HABITABILITY — CALIFORNIA CIVIL CODE § 1941.1
-
-Dear ${recipient},
-
-I am writing to request urgent repairs required under California Civil Code § 1941.1 (Implied Warranty of Habitability).
-
-The following conditions require immediate attention:
-- [Describe repair issue here, e.g., Heating failure, plumbing leak]
-
-Please confirm within 48 hours when licensed contractors will repair these conditions.
+Be advised that failure to address this matter within ten (10) business days may result in formal legal proceedings initiated under the California Code of Civil Procedure or Labor Code.
 
 Sincerely,
 
 ${sender}`;
+    }
 
-            } else if (type === 'privacy-notice') {
-                preview.textContent = 
-`DATE: ${today}
-
-TO: ${recipient}
-FROM: ${sender}
-
-RE: OBJECTION TO UNLAWFUL ENTRY — CALIFORNIA CIVIL CODE § 1954
-
-Dear ${recipient},
-
-I am writing to remind management that under California Civil Code § 1954, entry into a residential dwelling requires a minimum of 24 hours written notice specifying date, time, and purpose (except emergencies).
-
-Please ensure all future entries adhere to statutory notice requirements.
-
-Sincerely,
-
-${sender}`;
-
-            } else if (type === 'final-pay-demand') {
-                preview.textContent = 
-`DATE: ${today}
-
-TO: ${recipient} (Employer)
-FROM: ${sender} (Former Employee)
-
-RE: DEMAND FOR UNPAID FINAL WAGES & WAITING TIME PENALTIES — CAL. LAB. CODE §§ 201–203
-
-Dear ${recipient},
-
-I am writing to demand immediate payment of my final earned wages following the end of my employment. 
-
-Under California Labor Code § 201, final wages are due immediately upon discharge. Under Labor Code § 203, an employer's willful failure to pay earned wages upon termination results in waiting time penalties equal to one daily regular rate of pay for each day wages remain unpaid, up to a maximum of 30 days.
-
-Please issue my full earned wages plus accrued waiting time penalties immediately to avoid formal wage claims with the Labor Commissioner (DLSE).
-
-Sincerely,
-
-${sender}`;
-
-            } else if (type === 'break-penalty-demand') {
-                preview.textContent = 
-`DATE: ${today}
-
-TO: ${recipient} (Employer)
-FROM: ${sender} (Employee)
-
-RE: DEMAND FOR UNPAID MEAL & REST PERIOD PREMIUMS — CAL. LAB. CODE § 226.7
-
-Dear ${recipient},
-
-I am submitting a formal written request for unpaid meal and rest period premium payments owed under California Labor Code § 226.7 and applicable IWC Wage Orders.
-
-During my employment, I was routinely denied compliant 30-minute uninterrupted meal breaks prior to the 5th hour of work and/or 10-minute rest periods. Under Labor Code § 226.7, employers must pay one additional hour of pay at the employee's regular rate for each workday a compliant meal or rest break was not provided.
-
-Please review my time records and audit pay statements to remit all accrued premium pay.
-
-Sincerely,
-
-${sender}`;
-
-            } else if (type === 'expense-reimburse-demand') {
-                preview.textContent = 
-`DATE: ${today}
-
-TO: ${recipient} (Employer)
-FROM: ${sender} (Employee)
-
-RE: DEMAND FOR BUSINESS EXPENSE REIMBURSEMENT — CAL. LAB. CODE § 2802
-
-Dear ${recipient},
-
-I am writing to request reimbursement for necessary business expenses incurred in the discharge of my job duties pursuant to California Labor Code § 2802.
-
-The mandatory expenditures incurred include:
-- [Describe expenses, e.g., Mandatory personal cell phone usage, remote work internet, job-required equipment]
-
-Under Labor Code § 2802, employers must indemnify employees for all necessary business expenses. Please process these reimbursements in the upcoming pay period.
-
-Sincerely,
-
-${sender}`;
-            }
-        }
-
-        function copyLetter() {
-            const preview = document.getElementById('letter-preview');
-            if (preview.textContent.startsWith("Select template")) return;
-            navigator.clipboard.writeText(preview.textContent);
-            alert("Draft letter copied to clipboard!");
-        }
-    </script>
+    window.onload = init;
+  </script>
 </body>
 </html>
