@@ -58,10 +58,6 @@
             </h2>
             <div class="flex gap-2">
               <span id="domainBadge" class="text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">Labor Mode</span>
-              <!-- Unanswered Counter Badge -->
-              <span class="text-[10px] font-mono bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded">
-                <span data-i18n="unansweredLabel">Unanswered:</span> <span id="unansweredCount">0</span>
-              </span>
             </div>
           </div>
           <p data-i18n="aiSub" class="text-xs text-slate-400 mb-4">Query issues regarding California housing ordinances or labor/employment code.</p>
@@ -183,7 +179,6 @@
     let currentDomain = 'labor';
     let currentLang = 'en';
     let lastCalculatedDate = null;
-    let unansweredCount = 0;
 
     const TRANSLATIONS = {
       en: {
@@ -194,7 +189,6 @@
         sampleOvertime: "Overtime Pay",
         sampleBreaks: "Meal Breaks",
         sampleRent: "Rent Increase",
-        unansweredLabel: "Unanswered:",
         diagTitle: "Legal Rights Diagnostic Engine",
         diagSub: "Evaluate statutory compliance for your rental tenancy or employment status.",
         diagBtn: "Run Diagnostic",
@@ -219,7 +213,6 @@
         sampleOvertime: "加班费",
         sampleBreaks: "用餐休息",
         sampleRent: "租金上涨",
-        unansweredLabel: "无法解答:",
         diagTitle: "法律权益诊断引擎",
         diagSub: "评估您的租赁关系或雇佣状态是否符合法定标准。",
         diagBtn: "运行法律诊断",
@@ -244,7 +237,6 @@
         sampleOvertime: "Pago de Horas Extra",
         sampleBreaks: "Descansos para Comer",
         sampleRent: "Aumento de Renta",
-        unansweredLabel: "Sin respuesta:",
         diagTitle: "Motor de Diagnóstico de Derechos Legales",
         diagSub: "Evalúe el cumplimiento legal de su arrendamiento o estado laboral.",
         diagBtn: "Ejecutar Diagnóstico",
@@ -269,7 +261,6 @@
         sampleOvertime: "Bayad sa Overtime",
         sampleBreaks: "Break sa Pagkain",
         sampleRent: "Pagtaas ng Renta",
-        unansweredLabel: "Hindi Masagot:",
         diagTitle: "Engine para sa Pagsusuri ng Legal na Karapatan",
         diagSub: "Suriin ang pagsunod sa batas para sa iyong pagrenta o trabaho.",
         diagBtn: "Patakbuhin ang Diagnostic",
@@ -401,7 +392,7 @@
 
       warningBox.classList.add('hidden');
       aiOutput.classList.add('hidden');
-      diagResult.classList.add('hidden'); // Keep right side hidden when analyzing left side query
+      diagResult.classList.add('hidden');
 
       const pctMatch = input.match(/(\d+(\.\d+)?)\s*%/);
       const parsedPct = pctMatch ? parseFloat(pctMatch[1]) : null;
@@ -440,8 +431,6 @@
         aiOutput.innerHTML = analysisText;
         aiOutput.classList.remove('hidden');
       } else {
-        unansweredCount++;
-        document.getElementById('unansweredCount').textContent = unansweredCount;
         warningBox.innerHTML = `<strong>⚠️ Formal Legal Representation Required:</strong> The engine cannot resolve this question automatically. Please consult the <a href="https://www.calbar.ca.gov/Public/Need-Legal-Help" target="_blank" class="underline text-red-200 hover:text-white font-semibold">California State Bar Lawyer Referral Service</a>.`;
         warningBox.classList.remove('hidden');
       }
