@@ -65,10 +65,11 @@
             </div>
           </div>
           <p data-i18n="aiSub" class="text-xs text-slate-400 mb-4">Query issues regarding California housing ordinances or labor/employment code.</p>
-          <textarea id="userInput" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="e.g., 'My manager makes me work over 8 hours a day without overtime pay' or 'My landlord raised rent by 12%'..."></textarea>
+          
+          <textarea id="userInput" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="e.g., 'My manager makes me work over 8 hours a day without overtime pay' or 'Can my landlord suddenly increase my rent by 10%'..."></textarea>
 
-          <!-- Direct Inline AI Result Box -->
-          <div id="aiOutput" class="hidden mt-3 p-3 bg-indigo-950/60 border border-indigo-800 rounded-lg text-xs text-indigo-200"></div>
+          <!-- Direct Inline Query Response Window -->
+          <div id="aiOutput" class="hidden mt-3 p-3 bg-indigo-950/80 border border-indigo-700/80 rounded-lg text-xs text-indigo-100 shadow-inner"></div>
 
           <!-- Referral Warning Banner -->
           <div id="aiWarning" class="hidden mt-3 p-3 bg-red-950/60 border border-red-800 rounded-lg text-xs text-red-300"></div>
@@ -100,13 +101,13 @@
           <span data-i18n="diagBtn">Run Diagnostic</span>
         </button>
 
-        <!-- Output Banner -->
+        <!-- Diagnostic Output Banner -->
         <div id="diagResult" class="hidden mt-4 p-3 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1"></div>
       </div>
 
     </div>
 
-    <!-- Middle Section: Statutory Deadline & Wage Penalty Calculator -->
+    <!-- Statutory Deadline & Wage Penalty Calculator -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
       <div class="flex items-center justify-between mb-2">
         <h2 data-i18n="calcTitle" class="text-lg font-semibold flex items-center gap-2">
@@ -125,12 +126,8 @@
           </select>
         </div>
 
-        <!-- Dynamic Inputs -->
-        <div id="calcInputs" class="space-y-3">
-          <!-- Populated by JS -->
-        </div>
+        <div id="calcInputs" class="space-y-3"></div>
 
-        <!-- Output Window & .ICS Export -->
         <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col justify-between">
           <div>
             <div data-i18n="calcResultHeader" class="text-xs text-slate-400 mb-1">Calculated Output</div>
@@ -146,7 +143,7 @@
       </div>
     </div>
 
-    <!-- Bottom Section: Demand Letter Generator -->
+    <!-- Demand Letter Generator -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
       <div class="flex items-center justify-between mb-2">
         <h2 data-i18n="demandTitle" class="text-lg font-semibold flex items-center gap-2">
@@ -182,7 +179,6 @@
 
   </main>
 
-  <!-- Embedded JS Engine -->
   <script>
     let currentDomain = 'labor';
     let currentLang = 'en';
@@ -379,10 +375,10 @@
       } else {
         const prop = document.getElementById('diagPropType').value;
         const pct = parseFloat(document.getElementById('diagRentPct').value || '0');
-        if (prop === 'multi' && pct > 8.8) {
-          res.innerHTML = `<span class="text-amber-400 font-bold">POTENTIAL AB 1482 VIOLATION:</span> Increases above CPI + 5% (capped at 10%) violate statutory caps under Cal. Civ. Code § 1947.12.`;
+        if (prop === 'multi' && pct >= 8.8) {
+          res.innerHTML = `<span class="text-amber-400 font-bold">POTENTIAL AB 1482 VIOLATION (${pct}% Increase):</span> Increases at or above CPI + 5% (capped at 10%) violate statutory caps under Cal. Civ. Code § 1947.12.`;
         } else {
-          res.innerHTML = `<span class="text-emerald-400 font-bold">COMPLIANT:</span> Rent increase falls within expected statutory thresholds or property type is exempt.`;
+          res.innerHTML = `<span class="text-emerald-400 font-bold">COMPLIANT (${pct}% Increase):</span> Rent increase falls within expected statutory thresholds or property type is exempt.`;
         }
       }
     }
@@ -391,51 +387,62 @@
       const area = document.getElementById('userInput');
       if (type === 'overtime') area.value = "I worked 11 hours yesterday but my employer paid me my standard hourly rate for all hours.";
       if (type === 'breaks') area.value = "I work 8 hour shifts with no uninterrupted meal breaks allowed.";
-      if (type === 'rent') area.value = "My landlord sent a notice raising rent by 12% starting next month in an apartment built in 1998.";
+      if (type === 'rent') area.value = "Can my landlord suddenly increase my rent by 10%?";
     }
 
     function analyzeIssue() {
-      const input = document.getElementById('userInput').value.trim().toLowerCase();
+      const input = document.getElementById('userInput').value.trim();
+      const inputLower = input.toLowerCase();
       const warningBox = document.getElementById('aiWarning');
       const aiOutput = document.getElementById('aiOutput');
+      const diagResult = document.getElementById('diagResult');
 
       if (!input) return;
 
       warningBox.classList.add('hidden');
       aiOutput.classList.add('hidden');
+      diagResult.classList.add('hidden'); // Keep right side hidden when analyzing left side query
+
+      const pctMatch = input.match(/(\d+(\.\d+)?)\s*%/);
+      const parsedPct = pctMatch ? parseFloat(pctMatch[1]) : null;
 
       let isAnswerable = false;
       let analysisText = '';
 
-      // Intelligent keyword matching & dropdown synchronization
-      if (input.includes('break') || input.includes('meal') || input.includes('lunch')) {
+      if (inputLower.includes('break') || inputLower.includes('meal') || inputLower.includes('lunch')) {
         switchDomain('labor');
         const select = document.getElementById('diagIssue');
         if (select) select.value = 'nobreak';
-        analysisText = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED (Meal Breaks):</span> Under Cal. Lab. Code § 226.7, non-exempt employees working shifts over 5 hours are legally entitled to a 30-minute uninterrupted meal break. Denying this requires 1 hour of premium pay.`;
+        analysisText = `<div class="font-semibold text-indigo-300 mb-1">🔍 Analysis Output:</div><span class="text-emerald-400 font-bold">VIOLATION DETECTED (Meal Breaks):</span> Under Cal. Lab. Code § 226.7, non-exempt employees working shifts over 5 hours are legally entitled to a 30-minute uninterrupted meal break. Denying this requires 1 hour of premium pay per violation.`;
         isAnswerable = true;
-      } else if (input.includes('overtime') || input.includes('8 hour') || input.includes('hours') || input.includes('pay') || input.includes('wage')) {
+      } else if (inputLower.includes('overtime') || inputLower.includes('8 hour') || inputLower.includes('hours') || inputLower.includes('pay') || inputLower.includes('wage')) {
         switchDomain('labor');
         const select = document.getElementById('diagIssue');
         if (select) select.value = 'ot8';
-        analysisText = `<span class="text-emerald-400 font-bold">VIOLATION DETECTED (Overtime Pay):</span> Under Cal. Lab. Code § 510, non-exempt employees are entitled to 1.5x pay for hours worked over 8 in a single workday.`;
+        analysisText = `<div class="font-semibold text-indigo-300 mb-1">🔍 Analysis Output:</div><span class="text-emerald-400 font-bold">VIOLATION DETECTED (Overtime Pay):</span> Under Cal. Lab. Code § 510, non-exempt employees are entitled to 1.5x pay for hours worked over 8 in a single workday.`;
         isAnswerable = true;
-      } else if (input.includes('rent') || input.includes('landlord') || input.includes('eviction') || input.includes('lease') || input.includes('tenant')) {
+      } else if (inputLower.includes('rent') || inputLower.includes('landlord') || inputLower.includes('eviction') || inputLower.includes('lease') || inputLower.includes('tenant') || inputLower.includes('increase')) {
         switchDomain('housing');
+        
+        const pctToUse = parsedPct !== null ? parsedPct : 10;
         const rentInput = document.getElementById('diagRentPct');
-        if (rentInput) rentInput.value = '12';
-        analysisText = `<span class="text-amber-400 font-bold">HOUSING EVALUATION (AB 1482):</span> Under Cal. Civ. Code § 1947.12, annual rent increases for covered multi-family units are capped at 5% + CPI (max 10%). Exceeding this limit is unlawful.`;
+        if (rentInput) rentInput.value = pctToUse;
+
+        if (pctToUse >= 8.8) {
+          analysisText = `<div class="font-semibold text-indigo-300 mb-1">🔍 Analysis Output:</div><span class="text-amber-400 font-bold">POTENTIAL AB 1482 VIOLATION (${pctToUse}% Increase):</span> Under Cal. Civ. Code § 1947.12, annual rent increases for covered multi-family housing are capped at 5% + CPI (max 10%). A ${pctToUse}% increase requires mandatory statutory notice and may exceed maximum regional caps.`;
+        } else {
+          analysisText = `<div class="font-semibold text-indigo-300 mb-1">🔍 Analysis Output:</div><span class="text-emerald-400 font-bold">STATUTORY COMPLIANCE (${pctToUse}% Increase):</span> A ${pctToUse}% rent increase falls within typical allowable statutory limits under Cal. Civ. Code § 1947.12 (5% + CPI, up to max 10%).`;
+        }
         isAnswerable = true;
       }
 
       if (isAnswerable) {
         aiOutput.innerHTML = analysisText;
         aiOutput.classList.remove('hidden');
-        runDiagnostic(); // Automatically updates the right panel in sync
       } else {
         unansweredCount++;
         document.getElementById('unansweredCount').textContent = unansweredCount;
-        warningBox.innerHTML = `<strong>⚠️ Formal Legal Representation Required:</strong> The engine cannot resolve this question automatically. If you require legal representation, please refer to the <a href="https://www.calbar.ca.gov/Public/Need-Legal-Help" target="_blank" class="underline text-red-200 hover:text-white font-semibold">California State Bar Lawyer Referral Service</a>.`;
+        warningBox.innerHTML = `<strong>⚠️ Formal Legal Representation Required:</strong> The engine cannot resolve this question automatically. Please consult the <a href="https://www.calbar.ca.gov/Public/Need-Legal-Help" target="_blank" class="underline text-red-200 hover:text-white font-semibold">California State Bar Lawyer Referral Service</a>.`;
         warningBox.classList.remove('hidden');
       }
     }
